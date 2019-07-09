@@ -1,46 +1,54 @@
 {
     "name": "phossa2/event",
     "type": "library",
+    "description": "Event manager implementation libraray for PHP",
+    "keywords": [
+        "event",
+        "event manager",
+        "phossa",
+        "phossa2"
+    ],
+    "homepage": "https://github.com/bbatsche/event",
     "license": "MIT",
-    "homepage": "https://github.com/phossa2/event",
-    "description": "PSR-14 event manager implementation libraray for PHP",
-    "keywords": ["event", "event manager", "psr", "psr-14", "phossa", "phossa2"],
     "authors": [
         {
             "name": "Hong Zhang",
             "homepage": "https://github.com/phossa2"
+        },
+        {
+            "name": "Ben Batschelet",
+            "email": "ben.batschelet@gmail.com",
+            "homepage": "https://github.com/bbatsche"
         }
     ],
     "require": {
-        "php": ">=5.4.0",
+        "php": "^7.1",
         "phossa2/shared": "^2.0.21"
     },
-    "autoload": {
-        "psr-4": { "Phossa2\\Event\\": "src/Event/" }
-    },
     "require-dev": {
-        "phpunit/phpunit": "4.*",
-        "squizlabs/php_codesniffer": "2.*"
-    },
-    "scripts": {
-        "test": "phpunit",
-        "check": "phpcs --standard=psr2 src/",
-        "format": "phpcbf --standard=psr2 src/"
-    },
-    "provide": {
-        "psr/event-manager-implementation": "^1.0"
-    },
-    "config": {
-        "platform": {
-            "php": "5.4.0"
-        }
+        "phpunit/phpunit": "^7.0 || ^8.0",
+        "squizlabs/php_codesniffer": "^3.4"
     },
     "extra": {
         "branch-alias": {
             "dev-master": "2.1-dev"
         }
     },
+    "autoload": {
+        "psr-4": {
+            "Phossa2\\Event\\": "src"
+        }
+    },
     "archive": {
-        "exclude": [ "!vendor", "tests", "composer.lock" ]
+        "exclude": [
+            "!vendor",
+            "tests",
+            "composer.lock"
+        ]
+    },
+    "scripts": {
+        "check": "phpcs --standard=psr2 src/",
+        "format": "phpcbf --standard=psr2 src/",
+        "test": "phpunit"
     }
 }
