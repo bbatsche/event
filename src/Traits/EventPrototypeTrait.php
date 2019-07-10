@@ -2,9 +2,7 @@
 /**
  * Phossa Project
  *
- * @category  Library
- * @package   Phossa2\Event
- * @license   http://mit-license.org/ MIT License
+ * @license http://mit-license.org/ MIT License
  */
 
 declare(strict_types=1);
@@ -16,29 +14,18 @@ use Phossa2\Event\Interfaces\EventInterface;
 use Phossa2\Event\Interfaces\EventPrototypeInterface;
 
 /**
- * EventPrototypeTrait
+ * Injecting an event prototype for creating new events based on it
  *
- * Injecting a event prototype for creating new ones
- *
- * @package Phossa2\Event
- * @version 2.1.1
- * @since   2.1.1 added
+ * @since 2.1.1 added
  */
 trait EventPrototypeTrait
 {
-    /**
-     * event prototype
-     *
-     * @var    EventInterface
-     */
-    protected $event_proto;
+    /** @var EventInterface */
+    protected $eventPrototype;
 
-    /**
-     * {@inheritDoc}
-     */
     public function setEventPrototype(EventInterface $eventPrototype = null): EventPrototypeInterface
     {
-        $this->event_proto = $eventPrototype;
+        $this->eventPrototype = $eventPrototype;
 
         return $this;
     }
@@ -46,8 +33,9 @@ trait EventPrototypeTrait
     /**
      * Create an event
      *
-     * @param  string|EventInterface $event
-     * @param  mixed|null $target
+     * @param string|EventInterface $event
+     * @param mixed|null            $target
+     * @param mixed[]               $parameters
      */
     protected function newEvent($event, $target = null, array $parameters = []): EventInterface
     {
@@ -55,9 +43,9 @@ trait EventPrototypeTrait
             return $event;
         }
 
-        if (isset($this->event_proto)) {
+        if (isset($this->eventPrototype)) {
             // clone the prototype
-            $evt = clone $this->event_proto;
+            $evt = clone $this->eventPrototype;
 
             $evt->setName($event);
             $evt->setTarget($target);

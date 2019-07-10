@@ -42,19 +42,6 @@ class EventCapableAbstractTest extends TestCase
     }
 
     /**
-     * Test class's default event manager
-     *
-     * @covers Phossa2\Event\EventCapableAbstract::getEventManager
-     */
-    public function testGetEventManager()
-    {
-        // default manager
-        $obj = new \MyClass();
-        $em  = $obj->getEventManager();
-        $this->assertTrue($em->hasScope('MyClass'));
-    }
-
-    /**
      * @covers Phossa2\Event\EventCapableAbstract::setEventPrototype
      */
     public function testSetEventPrototype()
@@ -69,35 +56,13 @@ class EventCapableAbstractTest extends TestCase
     }
 
     /**
-     * @covers Phossa2\Event\EventCapableAbstract::triggerEvent
-     */
-    public function testTriggerEvent()
-    {
-        $this->expectOutputString('zzzyyyxxx');
-
-        // an interface level event manager
-        EventDispatcher::getShareable('MyInterface')
-            ->attach('*', function() { echo "yyy";}, 60);
-
-        EventDispatcher::getShareable('MyInterface2')
-            ->attach('*', function() { echo "zzz";}, 80);
-
-        // event capable class implmenting 'MyInterface'
-        $obj = new \MyClass();
-
-        // will auto attach events defined `eventsListening()`
-        // will trigger its own handler and interface level handler
-        $obj->triggerEvent('afterTest');
-    }
-
-    /**
      * Get trigger() result
      *
      * @covers Phossa2\Event\EventCapableAbstract::trigger
      */
     public function testTrigger()
     {
-        $this->expectOutputString('zzzyyyxxx');
+        $this->expectOutputString('xxx');
         $obj = new \MyClass();
         $this->assertTrue($obj->trigger('afterTest'));
     }

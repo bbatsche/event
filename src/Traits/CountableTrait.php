@@ -2,8 +2,6 @@
 /**
  * Phossa Project
  *
- * @category  Library
- * @package   Phossa2\Event
  * @license   http://mit-license.org/ MIT License
  */
 
@@ -11,17 +9,16 @@ declare(strict_types=1);
 
 namespace Phossa2\Event\Traits;
 
-use Phossa2\Event\Interfaces\EventInterface;
 use Phossa2\Event\Interfaces\CountableInterface;
+use Phossa2\Event\Interfaces\EventInterface;
 
 /**
  * CountableTrait
  *
  * Implmentation of CountableInterface
  *
- * @package Phossa2\Event
  * @see     CountableInterface
- * @version 2.1.0
+ *
  * @since   2.0.0 added
  * @since   2.1.0 updated
  */
@@ -34,17 +31,19 @@ trait CountableTrait
      */
     protected $callable_map = [];
 
-    /**
-     * {@inheritDoc}
-     */
     public function many(int $times, string $eventName, callable $callable, int $priority = 0): bool
     {
         // wrap the callable
-        $wrapper = function (EventInterface $event) use ($callable, $times) {
+        $wrapper = static function (EventInterface $event) use ($callable, $times): void {
             static $cnt = 0;
-            if ($cnt++ < $times) {
-                call_user_func($callable, $event);
+
+            if ($cnt >= $times) {
+                return;
             }
+
+            call_user_func($callable, $event);
+
+            $cnt++;
         };
 
         // mapping callable
@@ -57,9 +56,6 @@ trait CountableTrait
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function one(string $eventName, callable $callable, int $priority = 0): bool
     {
         return $this->many(1, $eventName, $callable, $priority);
@@ -74,8 +70,9 @@ trait CountableTrait
      */
     public function detach(string $event, callable $callback = null): bool
     {
-        if (null !== $callback) {
+        if (isset($callback)) {
             $oid = $this->hashCallable($callback);
+
             if (isset($this->callable_map[$event][$oid])) {
                 $callback = $this->callable_map[$event][$oid];
                 unset($this->callable_map[$event][$oid]);
@@ -95,6 +92,5 @@ trait CountableTrait
         return spl_object_hash((object) $callable);
     }
 
-    // from EventManagerInterface
     abstract public function attach(string $event, callable $callback, int $priority = 0): bool;
 }

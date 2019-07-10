@@ -2,9 +2,7 @@
 /**
  * Phossa Project
  *
- * @category  Library
- * @package   Phossa2\Event
- * @license   http://mit-license.org/ MIT License
+ * @license http://mit-license.org/ MIT License
  */
 
 declare(strict_types=1);
@@ -12,11 +10,9 @@ declare(strict_types=1);
 namespace Phossa2\Event\Interfaces;
 
 /**
- * EventInterface
+ * Interface for event objects
  *
- * @package Phossa2\Event
- * @version 2.1.0
- * @since   2.1.0 added
+ * @since 2.1.0 added
  */
 interface EventInterface
 {
@@ -28,12 +24,14 @@ interface EventInterface
     /**
      * Get target/context from which event was triggered
      *
-     * @return null|string|object
+     * @return string|object|null
      */
     public function getTarget();
 
     /**
      * Get parameters passed to the event
+     *
+     * @return mixed[]
      */
     public function getParams(): array;
 
@@ -52,12 +50,14 @@ interface EventInterface
     /**
      * Set the event target
      *
-     * @param  null|string|object $target
+     * @param string|object|null $target
      */
     public function setTarget($target): void;
 
     /**
      * Set event parameters
+     *
+     * @param mixed[] $params
      */
     public function setParams(array $params): void;
 

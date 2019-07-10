@@ -2,9 +2,7 @@
 /**
  * Phossa Project
  *
- * @category  Library
- * @package   Phossa2\Event
- * @license   http://mit-license.org/ MIT License
+ * @license http://mit-license.org/ MIT License
  */
 
 declare(strict_types=1);
@@ -14,18 +12,16 @@ namespace Phossa2\Event\Interfaces;
 /**
  * EventManagerInterface
  *
- * @package Phossa2\Event
- * @version 2.1.0
- * @since   2.1.0 added
+ * @since 2.1.0 added
  */
 interface EventManagerInterface
 {
     /**
      * Attaches a listener to an event
      *
-     * @param string $event the event to attach too
-     * @param callable $callback a callable function
-     * @param int $priority the priority at which the $callback executed
+     * @param string $event    Event to attach too
+     * @param int    $priority Priority at which the $callback executed
+     *
      * @return bool true on success false on failure
      */
     public function attach(string $event, callable $callback, int $priority = 0): bool;
@@ -33,8 +29,8 @@ interface EventManagerInterface
     /**
      * Detaches a listener from an event
      *
-     * @param string $event the event to detach too
-     * @param callable|null $callback a callable function
+     * @param string $event Event to detach too
+     *
      * @return bool true on success false on failure
      */
     public function detach(string $event, callable $callback = null): bool;
@@ -49,8 +45,10 @@ interface EventManagerInterface
      *
      * Can accept an EventInterface or will create one if not passed
      *
-     * @param  string|EventInterface $event
-     * @param  object|string $target
+     * @param string|EventInterface $event
+     * @param object|string         $target
+     * @param mixed[]               $argv
+     *
      * @return mixed
      */
     public function trigger($event, $target = null, array $argv = []);

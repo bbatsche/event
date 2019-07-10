@@ -80,11 +80,8 @@ class EventDispatcherTest extends TestCase
     {
         $this->expectOutputString('scope_bingoBINGO');
 
-        // event manager now belongs to $scope1 also
-        $this->object->addScope('scope');
-
         // bind event to shared manager of the $scope1
-        EventDispatcher::getShareable('scope')->attach('*', function($evt) {
+        $this->object->attach('*', function($evt) {
             echo "scope_" . $evt->getName();
         }, 10);
 
@@ -94,27 +91,6 @@ class EventDispatcherTest extends TestCase
         });
 
         $this->object->trigger('bingo');
-    }
-
-    /**
-     * shared event manager
-     *
-     * @covers Phossa2\Event\EventDispatcher::onEvent
-     * @covers Phossa2\Event\EventDispatcher::offEvent
-     */
-    public function testSharedManager2()
-    {
-        $this->expectOutputString('wow');
-
-        $this->object->addScope('x');
-        EventDispatcher::onEvent('x', '*', function($evt) {
-            echo $evt->getName();
-        });
-
-        $this->object->trigger('wow');
-
-        EventDispatcher::offEvent('x');
-        $this->object->trigger('wow');
     }
 
     /**

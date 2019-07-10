@@ -48,7 +48,6 @@ class EventTest extends TestCase
      * set empty name
      *
      * @covers Phossa2\Event\Event::setName
-     * @expectedExceptionCode Phossa2\Event\Message\Message::EVT_NAME_INVALID
      * @expectedException \InvalidArgumentException
      */
     public function testSetName2()

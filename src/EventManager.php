@@ -2,8 +2,6 @@
 /**
  * Phossa Project
  *
- * @category  Library
- * @package   Phossa2\Event
  * @license   http://mit-license.org/ MIT License
  */
 
@@ -11,14 +9,12 @@ declare(strict_types=1);
 
 namespace Phossa2\Event;
 
-use Phossa2\Shared\Base\ObjectAbstract;
 use Phossa2\Event\Interfaces\EventInterface;
-use Phossa2\Event\Interfaces\EventQueueInterface;
 use Phossa2\Event\Interfaces\EventManagerInterface;
+use Phossa2\Event\Interfaces\EventQueueInterface;
+use Phossa2\Shared\Base\ObjectAbstract;
 
 /**
- * EventManager
- *
  * A basic implementation of EventManagerInterface
  *
  * ```php
@@ -29,10 +25,9 @@ use Phossa2\Event\Interfaces\EventManagerInterface;
  * $events->trigger('test');
  * ```
  *
- * @package Phossa2\Event
  * @see     ObjectAbstract
  * @see     EventManagerInterface
- * @version 2.1.0
+ *
  * @since   2.0.0 added
  * @since   2.1.0 updated to use the new EventManagerInterface
  */
@@ -45,9 +40,6 @@ class EventManager extends ObjectAbstract implements EventManagerInterface
      */
     protected $events = [];
 
-    /**
-     * {@inheritDoc}
-     */
     public function attach(string $event, callable $callback, int $priority = 0): bool
     {
         if (!$this->hasEvent($event)) {
@@ -69,16 +61,13 @@ class EventManager extends ObjectAbstract implements EventManagerInterface
     {
         if ($this->hasEvent($event)) {
             $this->removeEventCallable($event, $callback);
-        } elseif ('' === $event) {
+        } elseif ($event === '') {
             $this->events = []; // remove all events
         }
 
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function clearListeners(string $event): void
     {
         $this->detach($event, null);
@@ -122,16 +111,13 @@ class EventManager extends ObjectAbstract implements EventManagerInterface
     /**
      * Create a new event
      *
-     * @param  string|EventInterface $eventName
-     * @param  object|string|null $target
+     * @param string|EventInterface $eventName
+     * @param object|string|null    $target
+     * @param mixed[]               $parameters
      */
     protected function newEvent($eventName, $target = null, array $parameters = []): EventInterface
     {
-        if (is_object($eventName)) {
-            return $eventName;
-        } else {
-            return new Event($eventName, $target, $parameters);
-        }
+        return is_object($eventName) ? $eventName : new Event($eventName, $target, $parameters);
     }
 
     /**
@@ -147,23 +133,18 @@ class EventManager extends ObjectAbstract implements EventManagerInterface
      */
     protected function getMatchedQueue(string $eventName): EventQueueInterface
     {
-        if ($this->hasEvent($eventName)) {
-            return $this->events[$eventName];
-        } else {
-            return $this->newEventQueue();
-        }
+        return $this->hasEvent($eventName) ? $this->events[$eventName] : $this->newEventQueue();
     }
 
     /**
      * Remove event or its callable
      *
-     * @param  string $eventName
-     * @param  callable|null $callable
-     * @access protected
+     * @param string        $eventName
+     * @param callable|null $callable
      */
     protected function removeEventCallable(string $eventName, callable $callable = null): void
     {
-        if (null === $callable) {
+        if (!isset($callable)) {
             // remove all callables
             $this->events[$eventName]->flush();
         } else {
@@ -172,6 +153,7 @@ class EventManager extends ObjectAbstract implements EventManagerInterface
         }
 
         // when count is zero, remove queue
+        // phpcs:ignore SlevomatCodingStandard.ControlStructures.EarlyExit
         if (count($this->events[$eventName]) === 0) {
             unset($this->events[$eventName]);
         }

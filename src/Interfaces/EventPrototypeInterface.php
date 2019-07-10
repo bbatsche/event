@@ -2,9 +2,7 @@
 /**
  * Phossa Project
  *
- * @category  Library
- * @package   Phossa2\Event
- * @license   http://mit-license.org/ MIT License
+ * @license http://mit-license.org/ MIT License
  */
 
 declare(strict_types=1);
@@ -12,13 +10,9 @@ declare(strict_types=1);
 namespace Phossa2\Event\Interfaces;
 
 /**
- * EventPrototypeInterface
- *
  * Dealing with event prototype stuff
  *
- * @package Phossa2\Event
- * @version 2.1.1
- * @since   2.1.1 added
+ * @since 2.1.1 added
  */
 interface EventPrototypeInterface
 {
