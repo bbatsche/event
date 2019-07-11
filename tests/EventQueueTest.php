@@ -52,7 +52,7 @@ class EventQueueTest extends TestCase
     public function testGetIterator1()
     {
         $it = $this->object->getIterator();
-        $this->assertTrue($it instanceof \ArrayAccess);
+        $this->assertInstanceOf('SplPriorityQueue', $it);
     }
 
     /**
@@ -63,8 +63,8 @@ class EventQueueTest extends TestCase
         $callable = [$this->object, 'count'];
         $this->object->insert($callable, 10);
         foreach ($this->object as $data) {
-            $this->assertTrue($callable === $data['data']);
-            $this->assertTrue(10 === $data['priority']);
+            $this->assertSame($callable, $data['data']);
+            $this->assertSame(10, $data['priority'][0]);
         }
     }
 
@@ -75,15 +75,15 @@ class EventQueueTest extends TestCase
     {
         // insert callable
         $this->object->insert([$this->object, 'count'], 10);
-        $this->assertTrue(1 === count($this->object));
+        $this->assertCount(1, $this->object);
 
         // insert another callable
         $this->object->insert([$this->object, 'flush'], 70);
-        $this->assertTrue(2 === count($this->object));
+        $this->assertCount(2, $this->object);
 
-        // insert callable one again (adjust priority only)
+        // insert callable one again
         $this->object->insert([$this->object, 'count'], 50);
-        $this->assertTrue(2 === $this->object->count());
+        $this->assertCount(3, $this->object);
     }
 
     /**
@@ -140,7 +140,7 @@ class EventQueueTest extends TestCase
     /**
      * @covers Phossa2\Event\EventQueue::combine
      */
-    public function testCombine()
+    public function testAppend()
     {
         // callables
         $call1 = [$this->object, 'count'];
@@ -153,12 +153,9 @@ class EventQueueTest extends TestCase
         $que2 = new EventQueue();
         $que2->insert($call2, 20);
 
-        $que3 = $this->object->combine($que2);
-
-        // type right
-        $this->assertTrue($que3 instanceof EventQueueInterface);
+        $this->object->append($que2);
 
         // count right
-        $this->assertTrue(2 === $que3->count());
+        $this->assertCount(2, $this->object);
     }
 }

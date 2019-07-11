@@ -17,7 +17,6 @@ use Phossa2\Event\Interfaces\ListenerAwareInterface;
 use Phossa2\Event\Traits\CountableTrait;
 use Phossa2\Event\Traits\EventPrototypeTrait;
 use Phossa2\Event\Traits\ListenerAwareTrait;
-use Phossa2\Shared\Globbing\GlobbingTrait;
 
 /**
  * Advanced event manager with:
@@ -36,7 +35,6 @@ class EventDispatcher extends EventManager implements
     CountableInterface,
     EventPrototypeInterface
 {
-    use GlobbingTrait;
     use CountableTrait;
     use ListenerAwareTrait;
     use EventPrototypeTrait;
@@ -67,9 +65,9 @@ class EventDispatcher extends EventManager implements
      */
     protected function getMatchedQueue(string $eventName): EventQueueInterface
     {
-        $nqueue = parent::getMatchedQueue($eventName);
+        $nqueue = $this->newEventQueue();
 
-        $nqueue = $nqueue->combine($this->matchEventQueues($eventName));
+        $nqueue->append($this->matchEventQueues($eventName));
 
         return $nqueue;
     }
@@ -94,10 +92,60 @@ class EventDispatcher extends EventManager implements
 
         foreach ($names as $evtName) {
             if ($this->hasEvent($evtName)) {
-                $nqueue = $nqueue->combine($this->events[$evtName]);
+                $nqueue->append($this->events[$evtName]);
             }
         }
 
         return $nqueue;
+    }
+
+    /**
+     * Returns all names matches with $exactName
+     *
+     * e.g.
+     * 'user.login' matches '*', 'u*.*', 'user.*', 'user.l*', 'user.login' etc.
+     *
+     * @param string[] $names
+     *
+     * @return string[]
+     */
+    protected function globbingNames(string $exactName, array $names): array
+    {
+        return array_filter($names, function ($name) use ($exactName): bool {
+            return $this->nameGlobbing($exactName, $name);
+        });
+    }
+
+    /**
+     * Check to see if $name matches with $exactName
+     *
+     *  e.g.
+     *  ```php
+     *  // true
+     *  $this->nameGlobbing('user.*', 'user.login');
+     *
+     *  // true
+     *  $this->nameGlobbing('*', 'user.login');
+     *
+     *  // false
+     *  $this->nameGLobbing('blog.*', 'user.login');
+     *  ```
+     */
+    protected function nameGlobbing(string $exactName, string $name): bool
+    {
+        if ($name === $exactName) {
+            return true;
+        }
+
+        if (strpos($name, '*') !== false) {
+            $pat = str_replace(['.', '*'], ['[.]', '[^.]*+'], $name);
+
+            // last '*' should be different
+            $pat = substr($pat, -6) !== '[^.]*+' ? $pat : (substr($pat, 0, -6) . '.*+');
+
+            return preg_match('~^' . $pat . '$~', $exactName) > 0;
+        }
+
+        return false;
     }
 }

@@ -13,7 +13,6 @@ use Phossa2\Event\Interfaces\EventCapableInterface;
 use Phossa2\Event\Interfaces\ListenerInterface;
 use Phossa2\Event\Traits\EventCapableTrait;
 use Phossa2\Event\Traits\ListenerTrait;
-use Phossa2\Shared\Base\ObjectAbstract;
 
 /**
  * Base class for event capable
@@ -22,7 +21,7 @@ use Phossa2\Shared\Base\ObjectAbstract;
  * @since   2.1.0 modified with new interfaces
  * @since   2.1.3 added ListenerTrait
  */
-abstract class EventCapableAbstract extends ObjectAbstract implements EventCapableInterface, ListenerInterface
+abstract class EventCapableAbstract implements EventCapableInterface, ListenerInterface
 {
     use EventCapableTrait;
     use ListenerTrait;

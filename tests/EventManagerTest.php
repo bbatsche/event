@@ -58,7 +58,7 @@ class EventManagerTest extends TestCase
      */
     public function testAttach2()
     {
-        $this->expectOutputString('callable1callable2callable2callable1');
+        $this->expectOutputString('callable1callable2callable2callable1callable2');
 
         $callable1 = function(EventInterface $evt) {
             echo "callable1";
@@ -72,7 +72,7 @@ class EventManagerTest extends TestCase
 
         $this->object->trigger('test1');
 
-        // adjust callable priority
+        // add with new priority
         $this->object->attach('test1', $callable2, 90);
         $this->object->trigger('test1');
     }
@@ -128,7 +128,7 @@ class EventManagerTest extends TestCase
         $this->object->trigger('test1');
 
         // off one event
-        $this->object->detach('test1', null);
+        $this->object->detach('test1');
         $this->object->trigger('test1');
     }
 

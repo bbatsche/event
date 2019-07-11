@@ -12,7 +12,6 @@ namespace Phossa2\Event;
 use Phossa2\Event\Interfaces\EventInterface;
 use Phossa2\Event\Interfaces\EventManagerInterface;
 use Phossa2\Event\Interfaces\EventQueueInterface;
-use Phossa2\Shared\Base\ObjectAbstract;
 
 /**
  * A basic implementation of EventManagerInterface
@@ -31,7 +30,7 @@ use Phossa2\Shared\Base\ObjectAbstract;
  * @since   2.0.0 added
  * @since   2.1.0 updated to use the new EventManagerInterface
  */
-class EventManager extends ObjectAbstract implements EventManagerInterface
+class EventManager implements EventManagerInterface
 {
     /**
      * Events managing
